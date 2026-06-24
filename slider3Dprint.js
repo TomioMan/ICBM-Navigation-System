@@ -961,3 +961,49 @@ function newSnakeGame(){
     snakeDirection = "ArrowRight";
     commandQueue.length = 0;
 }
+
+/**
+ * Univerzální pomocná funkce pro simulaci stisku klávesy
+ * @param {string} targetSelector - CSS selektor cíle (např. '#input', 'body'). Pokud chybí, použije se window.
+ */
+function simulateKeyPress(keyName, codeName, keyCodeValue, targetSelector = null) {
+  const target = targetSelector ? document.querySelector(targetSelector) : window;
+  if (!target) return;
+
+  const eventConfig = {
+    key: keyName,
+    code: codeName,
+    keyCode: keyCodeValue,
+    which: keyCodeValue,
+    bubbles: true,
+    cancelable: true
+  };
+
+  // 1. Simulace stisknutí klávesy
+  const downEvent = new KeyboardEvent('keydown', eventConfig);
+  target.dispatchEvent(downEvent);
+
+  // 2. Simulace puštění klávesy (následuje ihned po stisknutí)
+  const upEvent = new KeyboardEvent('keyup', eventConfig);
+  target.dispatchEvent(upEvent);
+}
+
+function pressSpace(targetSelector = null) {
+  simulateKeyPress(' ', 'Space', 32, targetSelector);
+}
+
+function pressArrowUp(targetSelector = null) {
+  simulateKeyPress('ArrowUp', 'ArrowUp', 38, targetSelector);
+}
+
+function pressArrowDown(targetSelector = null) {
+  simulateKeyPress('ArrowDown', 'ArrowDown', 40, targetSelector);
+}
+
+function pressArrowLeft(targetSelector = null) {
+  simulateKeyPress('ArrowLeft', 'ArrowLeft', 37, targetSelector);
+}
+
+function pressArrowRight(targetSelector = null) {
+  simulateKeyPress('ArrowRight', 'ArrowRight', 39, targetSelector);
+}
