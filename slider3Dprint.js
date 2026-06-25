@@ -248,19 +248,11 @@ function spawnAllMarks(){
     });
 }
 
-// at the begining, it spawns all the marks, but it also clones their-
-// entries into the list, so i remove half the entries on initialization  ^‿^ 
-/*
-setTimeout(() => {
-    for (let i = 1; i < markArray.length ; i++){
-        markArray.pop();
-    }
-
-    console.log("Initialized List:", markArray)
-
-    isArrayInitialized = true;
-}, 100);
-*/
+if (window.innerWidth < 670){
+    axisX.value = 40;
+    axisY.value = 20;
+    changePlaygroundSize()
+}
 
 function positionDot(){
     dot.style.left = additionX + (inputX.value * 10) + "px";
