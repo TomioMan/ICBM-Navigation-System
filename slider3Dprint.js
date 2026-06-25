@@ -962,12 +962,25 @@ function newSnakeGame(){
     commandQueue.length = 0;
 }
 
-/**
- * Univerzální pomocná funkce pro simulaci stisku klávesy
- * @param {string} targetSelector - CSS selektor cíle (např. '#input', 'body'). Pokud chybí, použije se window.
- */
+function createKeyboardEvent(type, options) {
+  const event = new KeyboardEvent(type, options);
+  const modifierProps = ['key', 'code', 'keyCode', 'which'];
+  modifierProps.forEach((prop) => {
+    if (options[prop] !== undefined) {
+      try {
+        Object.defineProperty(event, prop, {
+          get: () => options[prop]
+        });
+      } catch (e) {
+        // ignore readonly property failures
+      }
+    }
+  });
+  return event;
+}
+
 function simulateKeyPress(keyName, codeName, keyCodeValue, targetSelector = null) {
-  const target = targetSelector ? document.querySelector(targetSelector) : window;
+  const target = targetSelector ? document.querySelector(targetSelector) : document.activeElement || document.body || window;
   if (!target) return;
 
   const eventConfig = {
@@ -979,12 +992,10 @@ function simulateKeyPress(keyName, codeName, keyCodeValue, targetSelector = null
     cancelable: true
   };
 
-  // 1. Simulace stisknutí klávesy
-  const downEvent = new KeyboardEvent('keydown', eventConfig);
+  const downEvent = createKeyboardEvent('keydown', eventConfig);
   target.dispatchEvent(downEvent);
 
-  // 2. Simulace puštění klávesy (následuje ihned po stisknutí)
-  const upEvent = new KeyboardEvent('keyup', eventConfig);
+  const upEvent = createKeyboardEvent('keyup', eventConfig);
   target.dispatchEvent(upEvent);
 }
 
